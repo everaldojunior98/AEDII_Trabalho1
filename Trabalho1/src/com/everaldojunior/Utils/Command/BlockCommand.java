@@ -3,9 +3,9 @@ package com.everaldojunior.Utils.Command;
 public class BlockCommand
 {
     private CommandTypes commandType;
-    private String[] arguments;
+    private int[] arguments;
 
-    public BlockCommand(CommandTypes type, String[] args)
+    public BlockCommand(CommandTypes type, int[] args)
     {
         this.commandType = type;
         this.arguments = args;
@@ -16,7 +16,7 @@ public class BlockCommand
         return this.commandType;
     }
 
-    public String[] GetArguments()
+    public int[] GetArguments()
     {
         return this.arguments;
     }

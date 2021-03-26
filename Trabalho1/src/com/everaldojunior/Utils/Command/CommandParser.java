@@ -50,7 +50,7 @@ public class CommandParser
                 if(type.equals("quit"))
                     command = new BlockCommand(CommandTypes.QUIT, null);
                 else
-                    command = new BlockCommand(CommandTypes.CREATE_BLOCKS, new String[]{type});
+                    command = new BlockCommand(CommandTypes.CREATE_BLOCKS, new int[]{Integer.parseInt(type)});
 
                 commands.Add(command);
             }
@@ -58,15 +58,16 @@ public class CommandParser
             {
                 var type = tokens[0];
                 var subType = tokens[2];
+                var args = new int[]{Integer.parseInt(tokens[1]), Integer.parseInt(tokens[3])};
 
                 if(subType.equals("onto"))
                 {
                     BlockCommand command;
 
                     if(type.equals("move"))
-                        command = new BlockCommand(CommandTypes.MOVE_ONTO, new String[]{tokens[1], tokens[3]});
+                        command = new BlockCommand(CommandTypes.MOVE_ONTO, args);
                     else
-                        command = new BlockCommand(CommandTypes.PILE_ONTO, new String[]{tokens[1], tokens[3]});
+                        command = new BlockCommand(CommandTypes.PILE_ONTO, args);
 
                     commands.Add(command);
                 }
@@ -75,9 +76,9 @@ public class CommandParser
                     BlockCommand command;
 
                     if(type.equals("move"))
-                        command = new BlockCommand(CommandTypes.MOVE_OVER, new String[]{tokens[1], tokens[3]});
+                        command = new BlockCommand(CommandTypes.MOVE_OVER, args);
                     else
-                        command = new BlockCommand(CommandTypes.PILE_OVER, new String[]{tokens[1], tokens[3]});
+                        command = new BlockCommand(CommandTypes.PILE_OVER, args);
 
                     commands.Add(command);
                 }

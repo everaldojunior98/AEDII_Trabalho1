@@ -8,10 +8,11 @@ public class Main
 {
     public static void main(String[] args)
     {
-        var blocks = new TBlocos(5);
-        blocks.PrintBlocks();
-
+        var blocks = new TBlocos();
         var parser = new CommandParser("src/input.txt");
         var commands = parser.Parse();
+
+        blocks.ExecuteCommands(commands);
+        blocks.PrintBlocks();
     }
 }
