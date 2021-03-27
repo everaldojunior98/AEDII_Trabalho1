@@ -3,6 +3,10 @@ package com.everaldojunior.Blocks;
 import com.everaldojunior.Utils.Command.BlockCommand;
 import com.everaldojunior.Utils.List.LinkedList;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class TBlocos
 {
     private LinkedList<Block>[] blocks;
@@ -10,15 +14,23 @@ public class TBlocos
     //Função para printar todos os blocos formatados na tela
     public void PrintBlocks()
     {
-        if(blocks == null)
-            return;
+        System.out.print(BlocksToString());
+    }
 
-        for (var i = 0; i < blocks.length; i++)
+    //Função para salvar o output em um arquivo texto
+    public void SaveOutput(String path)
+    {
+        try
         {
-            System.out.print(i + ": ");
-            for (var block : blocks[i])
-                System.out.print(block.GetId() + " ");
-            System.out.println();
+            var outputFile = new File(path);
+
+            var writer = new FileWriter(outputFile);
+            writer.write(BlocksToString());
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Erro: Ocorreu um erro ao salvar o output");
         }
     }
 
@@ -261,5 +273,24 @@ public class TBlocos
         }
 
         return new BlockInfo(block, blockPosition, stacked);
+    }
+
+    //Converte a estrutura de blocos para uma string
+    private String BlocksToString()
+    {
+        var string = "";
+
+        if(blocks == null)
+            return string;
+
+        for (var i = 0; i < blocks.length; i++)
+        {
+            string += i + ": ";
+            for (var block : blocks[i])
+                string += block.GetId() + " ";
+            string += "\n";
+        }
+
+        return string;
     }
 }

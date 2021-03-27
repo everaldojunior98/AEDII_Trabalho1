@@ -1,7 +1,6 @@
 package com.everaldojunior;
 
 import com.everaldojunior.Blocks.TBlocos;
-import com.everaldojunior.Utils.Command.BlockCommand;
 import com.everaldojunior.Utils.Command.CommandParser;
 
 public class Main
@@ -14,5 +13,6 @@ public class Main
 
         blocks.ExecuteCommands(commands);
         blocks.PrintBlocks();
+        blocks.SaveOutput("src/output.txt");
     }
 }
