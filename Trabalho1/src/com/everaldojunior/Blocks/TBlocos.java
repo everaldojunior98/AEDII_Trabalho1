@@ -72,53 +72,26 @@ public class TBlocos
     //estiverem sobre a ou b para as suas posições originais.
     private void MoveOnto(int a, int b)
     {
+        //Verifica se pode executar o comando, caso não apenas ignora
         if(!CanExecuteCommand(a, b))
             return;
 
-        var stackedOnA = new LinkedList<Block>();
-        var stackedOnB = new LinkedList<Block>();
+        //Pega as informações do bloco A
+        var blockAInfo = GetBlockInfo(a);
+        Block blockA = blockAInfo.GetBlock();
+        int blockAPosition = blockAInfo.GetCurrentPosition();
+        var stackedOnA = blockAInfo.GetStackedBlocks();
 
-        Block blockA = null;
-        int blockAPosition = 0;
+        //Pega as informações do bloco B
+        var blockBInfo = GetBlockInfo(b);
+        int blockBPosition = blockBInfo.GetCurrentPosition();
+        var stackedOnB = blockBInfo.GetStackedBlocks();
 
-        int blockBPosition = 0;
+        //Retorna os blocos empilhados em cima do A para a posição inicial
+        ReturnToDefaultPosition(stackedOnA);
 
-        //Pega quais blocos estão em cima de A e B
-        for (var i = 0; i < blocks.length; i++)
-        {
-            var foundA = false;
-            var foundB = false;
-            for (var block : this.blocks[i])
-            {
-                //Armazena os blocos que estão em cima de A ou B
-                if(foundA)
-                    stackedOnA.Add(block);
-                else if(foundB)
-                    stackedOnB.Add(block);
-
-                if(block.GetId() == a)
-                {
-                    blockA = block;
-                    blockAPosition = i;
-                    foundA = true;
-                }
-                else if(block.GetId() == b)
-                {
-                    blockBPosition = i;
-                    foundB = true;
-                }
-            }
-        }
-
-        //Reverte a lista para remover do ultimo até chegar no bloco A
-        stackedOnA.Reverse();
-        for (Block block : stackedOnA)
-            ReturnToDefaultPosition(block);
-
-        //Reverte a lista para remover do ultimo até chegar no bloco B
-        stackedOnB.Reverse();
-        for (Block block : stackedOnB)
-            ReturnToDefaultPosition(block);
+        //Retorna os blocos empilhados em cima do B para a posição inicial
+        ReturnToDefaultPosition(stackedOnB);
 
         //Desempilha o bloco A da posição que ele tava e empilha em cima de B
         this.blocks[blockAPosition].Remove(blockA);
@@ -174,19 +147,52 @@ public class TBlocos
         return true;
     }
 
-    private void ReturnToDefaultPosition(Block blockToReturn)
+    private void ReturnToDefaultPosition(LinkedList<Block> returnList)
     {
-        //Procura pelo bloco, remove e adiciona na posição inicial
+        //Reverte a lista para remover do ultimo até chegar no bloco A
+        returnList.Reverse();
+
+        for (Block blockToReturn : returnList)
+            //Procura pelo bloco, remove e adiciona na posição inicial
+            for (var i = 0; i < blocks.length; i++)
+            {
+                //Procura pelo bloco e remove
+                for (var block : this.blocks[i])
+                    if(block.GetId() == blockToReturn.GetId())
+                        blocks[i].Remove(block);
+
+                //Adiciona o bloco na posição inicial
+                if(i == blockToReturn.GetId())
+                    blocks[blockToReturn.GetId()].Add(blockToReturn);
+            }
+    }
+
+    //Pega o bloco, sua posição e quem está empilhado em cima. Baseado no ID do bloco
+    private BlockInfo GetBlockInfo(int id)
+    {
+        var stacked = new LinkedList<Block>();
+        Block block = null;
+        int blockPosition = 0;
+
+        //Pega quais blocos estão em cima de A
         for (var i = 0; i < blocks.length; i++)
         {
-            //Procura pelo bloco e remove
-            for (var block : this.blocks[i])
-                if(block.GetId() == blockToReturn.GetId())
-                    blocks[i].Remove(block);
+            var found = false;
+            for (var b : this.blocks[i])
+            {
+                //Armazena os blocos que estão em cima de A ou B
+                if(found)
+                    stacked.Add(b);
 
-            //Adiciona o bloco na posição inicial
-            if(i == blockToReturn.GetId())
-                blocks[blockToReturn.GetId()].Add(blockToReturn);
+                if(b.GetId() == id)
+                {
+                    block = b;
+                    blockPosition = i;
+                    found = true;
+                }
+            }
         }
+
+        return new BlockInfo(block, blockPosition, stacked);
     }
 }
