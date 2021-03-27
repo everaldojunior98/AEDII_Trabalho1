@@ -129,7 +129,33 @@ public class TBlocos
     //originais.
     private void PileOnto(int a, int b)
     {
+        //Verifica se pode executar o comando, caso não apenas ignora
+        if(!CanExecuteCommand(a, b))
+            return;
+        //Pega as informações do bloco A
+        var blockAInfo = GetBlockInfo(a);
+        Block blockA = blockAInfo.GetBlock();
+        int blockAPosition = blockAInfo.GetCurrentPosition();
+        var stackedOnA = blockAInfo.GetStackedBlocks();
 
+        //Pega as informações do bloco B
+        var blockBInfo = GetBlockInfo(b);
+        int blockBPosition = blockBInfo.GetCurrentPosition();
+        var stackedOnB = blockBInfo.GetStackedBlocks();
+
+        //Retorna os blocos empilhados em cima do A para a posição inicial
+        ReturnToDefaultPosition(stackedOnB);
+
+        //Desempilha o bloco A da posição que ele tava e empilha em cima de B
+        this.blocks[blockAPosition].Remove(blockA);
+        this.blocks[blockBPosition].Add(blockA);
+
+        //Desempilha todos os blocos que esta em A e empilha em B
+        for (var block : stackedOnA)
+        {
+            this.blocks[blockAPosition].Remove(block);
+            this.blocks[blockBPosition].Add(block);
+        }
     }
 
     //coloca o bloco a juntamente com todos os blocos que estiverem sobre ele
@@ -171,7 +197,7 @@ public class TBlocos
         //Reverte a lista para remover do ultimo até chegar no bloco A
         returnList.Reverse();
 
-        for (Block blockToReturn : returnList)
+        for (var blockToReturn : returnList)
             //Procura pelo bloco, remove e adiciona na posição inicial
             for (var i = 0; i < blocks.length; i++)
             {
