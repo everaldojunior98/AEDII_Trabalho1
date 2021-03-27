@@ -102,7 +102,26 @@ public class TBlocos
     //blocos que já estiverem sobre a às suas posições originais.
     private void MoveOver(int a, int b)
     {
+        //Verifica se pode executar o comando, caso não apenas ignora
+        if(!CanExecuteCommand(a, b))
+            return;
 
+        //Pega as informações do bloco A
+        var blockAInfo = GetBlockInfo(a);
+        Block blockA = blockAInfo.GetBlock();
+        int blockAPosition = blockAInfo.GetCurrentPosition();
+        var stackedOnA = blockAInfo.GetStackedBlocks();
+
+        //Pega as informações do bloco B
+        var blockBInfo = GetBlockInfo(b);
+        int blockBPosition = blockBInfo.GetCurrentPosition();
+
+        //Retorna os blocos empilhados em cima do A para a posição inicial
+        ReturnToDefaultPosition(stackedOnA);
+
+        //Desempilha o bloco A da posição que ele tava e empilha em cima de B
+        this.blocks[blockAPosition].Remove(blockA);
+        this.blocks[blockBPosition].Add(blockA);
     }
 
     //coloca o bloco a juntamente com todos os blocos que estiverem sobre ele
