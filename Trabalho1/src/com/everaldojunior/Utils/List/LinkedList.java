@@ -1,5 +1,7 @@
 package com.everaldojunior.Utils.List;
 
+import com.everaldojunior.Blocks.Block;
+
 import java.util.Iterator;
 
 public class LinkedList<T> implements Iterable<T>
@@ -75,6 +77,23 @@ public class LinkedList<T> implements Iterable<T>
 
             lastNode = currentNode;
             currentNode = currentNode.GetNextNode();
+        }
+    }
+
+    public void Reverse()
+    {
+        var currentNode = this.firstNode;
+        this.firstNode = this.lastNode;
+        this.lastNode = currentNode;
+
+        Node<T> nextNode = null;
+        Node<T> lastNode = null;
+        while (currentNode != null)
+        {
+            nextNode = currentNode.GetNextNode();
+            currentNode.UpdateNextNode(lastNode);
+            lastNode = currentNode;
+            currentNode = nextNode;
         }
     }
 
